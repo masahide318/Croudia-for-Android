@@ -1,2 +1,3 @@
 # Croudia-for-Android
-クローイドのAndroidアプリ
+クローイドのAndroidアプリのソースです
+好きに使って勝手に改変してもらってもよいです
