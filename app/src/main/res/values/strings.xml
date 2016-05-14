@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">クローイド</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="share_count">%1$dシェア</string>
+    <string name="favorites_count">☆%1$d</string>
+    <string name="via_name">via %1$s</string>
+    <string name="dialog_share">シェアしますか？</string>
+    <string name="follow">\@%1$sさんのフォロー</string>
+    <string name="follower">\@%1$sさんのフォロワー</string>
+    <string name="navigation_drawer_open">Drawer Open</string>
+    <string name="navigation_drawer_close">Drawer Closed</string>
+    <string name="main_post_hint">なんか書く</string>
+    <string name="main_post_button">ささやく</string>
+</resources>
