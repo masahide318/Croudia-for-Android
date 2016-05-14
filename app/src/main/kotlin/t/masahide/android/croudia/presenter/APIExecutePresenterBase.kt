@@ -30,31 +30,29 @@ abstract class APIExecutePresenterBase(val service: ServiceCreatable = ServiceCr
         get() = accessTokenService.getAccessToken().refreshToken
 
     val delayTime: Long
-        get() = if (LockObject.hoge.refreshing) 1000 else 0
+        get() = if (LockObject.refreshing) 1000 else 0
 
     fun refreshToken(): Observable<AccessToken> {
         val refreshObservable: Observable<AccessToken>
-        if (!accessTokenService.isExpiredToken() || LockObject.hoge.refreshing) {
+        if (!accessTokenService.isExpiredToken() || LockObject.refreshing) {
             refreshObservable = Observable.create<AccessToken> {
                 subscribe ->
                 subscribe.onNext(accessTokenService.getAccessToken())
             }.delay(delayTime, TimeUnit.MILLISECONDS)
         } else {
-            LockObject.hoge.refreshing = true
+            LockObject.refreshing = true
             refreshObservable = Observable.create<AccessToken> {
                 subscribe ->
                 service.build().refreshToken(accessToken, refreshToken)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .onNext {
-                            Log.d("hoge", "refresh onNext")
                             accessTokenService.saveAccessToken(it)
                             subscribe.onNext(it)
-                            LockObject.hoge.refreshing = false
+                            LockObject.refreshing = false
                         }
                         .onError {
-                            LockObject.hoge.refreshing = false
-                            Log.d("hoge", "refresh error")
+                            LockObject.refreshing = false
                         }.subscribe()
             }
         }

@@ -21,11 +21,12 @@ import t.masahide.android.croudia.presenter.TimeLineFragmentPresenter
 
 open class TimelineFragmentBase : RxFragment() {
 
-    interface Callback{
-        fun onClickReply(status:Status)
+    interface Callback {
+        fun onClickReply(status: Status)
     }
+
     val presenter = TimeLineFragmentPresenter(this)
-    lateinit var adapter:TimeLineAdapter
+    lateinit var adapter: TimeLineAdapter
     lateinit var binding: FragmentTimelineBinding
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -38,30 +39,26 @@ open class TimelineFragmentBase : RxFragment() {
         super.onAttach(context)
     }
 
-    fun requestTimeLine() {
-        presenter.requestTimeline()
-    }
-
     override fun onResume() {
         super.onResume()
-        requestTimeLine()
+        presenter.requestTimeline(refresh = true)
     }
 
     fun finishRefresh() {
         adapter.clear()
     }
 
-    fun loadTimeLineBySinceId(){
+    fun loadTimeLineBySinceId() {
         presenter.loadTimeLineSince()
     }
 
     fun loadedStatus(statusList: List<Status>) {
         binding.progressBar.visibility = View.GONE
-        if( adapter.count > 0 ){
-            for(item in statusList.reversed()){
-                adapter.insert(item,0)
+        if ( adapter.count > 0 ) {
+            for (item in statusList.reversed()) {
+                adapter.insert(item, 0)
             }
-        }else{
+        } else {
             adapter.addAll(statusList)
         }
         adapter.notifyDataSetChanged()
@@ -75,20 +72,21 @@ open class TimelineFragmentBase : RxFragment() {
         binding.refresh.setOnRefreshListener { presenter.refresh() }
         binding.list.setOnItemClickListener { parent, view, position, id ->
             val selectedStatus = adapter.getItem(position)
-            when(id){
+            when (id) {
                 R.id.txtShare.toLong() -> presenter.clickShare(selectedStatus)
                 R.id.favorite.toLong() -> presenter.clickFavorite(selectedStatus)
                 R.id.imgReply.toLong() -> {
-                    if(isAdded && activity is Callback){
+                    if (isAdded && activity is Callback) {
                         (activity as Callback).onClickReply(selectedStatus)
                     }
                 }
-                R.id.imgDelete.toLong() ->{
+                R.id.imgDelete.toLong() -> {
                     presenter.clickDelete(selectedStatus)
                     adapter.remove(selectedStatus)
                     adapter.notifyDataSetChanged()
                 }
-                else -> {}
+                else -> {
+                }
             }
         }
         binding.list.setOnScrollListener(object : AbsListView.OnScrollListener {

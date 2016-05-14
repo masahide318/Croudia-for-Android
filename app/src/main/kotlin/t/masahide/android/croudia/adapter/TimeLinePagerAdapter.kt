@@ -12,14 +12,13 @@ import t.masahide.android.croudia.ui.fragment.TimelineFragmentBase
  * Created by Masahide on 2016/05/04.
  */
 
-class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class TimeLinePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         return TimeLineEnum.values()[position].getFragment()
     }
 
     override fun getCount(): Int {
-        // Show 3 total pages.
         return TimeLineEnum.values().size
     }
 

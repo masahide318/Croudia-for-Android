@@ -13,4 +13,5 @@
     <color name="post">#FF9933</color>
     <color name="side_menu_bg">#eeeeee</color>
     <color name="reply_bg">#aaFF9999</color>
+    <color name="translate">#00000000</color>
 </resources>

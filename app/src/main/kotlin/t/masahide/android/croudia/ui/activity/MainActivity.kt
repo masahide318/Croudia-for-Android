@@ -17,7 +17,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity
-import t.masahide.android.croudia.adapter.SectionsPagerAdapter
+import t.masahide.android.croudia.adapter.TimeLinePagerAdapter
 import t.masahide.android.croudia.entitiy.User
 import t.masahide.android.croudia.presenter.MainPresenter
 import t.masahide.android.croudia.R
@@ -38,7 +38,7 @@ class MainActivity : RxAppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
     var mTmpSlideOffset = 0f
 
-    lateinit var mSectionsPagerAdapter: SectionsPagerAdapter;
+    lateinit var mTimeLinePagerAdapter: TimeLinePagerAdapter;
     lateinit var mViewPager: ViewPager
     val behavior by lazy {
         BottomSheetBehavior.from(binding.bottomSheet)
@@ -48,9 +48,9 @@ class MainActivity : RxAppCompatActivity(), NavigationView.OnNavigationItemSelec
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar)
 
-        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
+        mTimeLinePagerAdapter = TimeLinePagerAdapter(supportFragmentManager)
         mViewPager = binding.container
-        mViewPager.adapter = mSectionsPagerAdapter
+        mViewPager.adapter = mTimeLinePagerAdapter
 
         binding.tabs.setupWithViewPager(mViewPager)
 
@@ -112,6 +112,10 @@ class MainActivity : RxAppCompatActivity(), NavigationView.OnNavigationItemSelec
             binding.editStatus.tag = status.id
         }
         binding.editStatus.setSelection(binding.editStatus.text.length)
+        binding.editStatus.isFocusableInTouchMode = true
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.editStatus,0)
+
     }
     fun closeBottomSheet(){
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -123,7 +127,7 @@ class MainActivity : RxAppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     fun onPostSuccess() {
         closeBottomSheet()
-        mSectionsPagerAdapter.getCurrentFragment(mViewPager,mViewPager.currentItem).loadTimeLineBySinceId()
+        mTimeLinePagerAdapter.getCurrentFragment(mViewPager,mViewPager.currentItem).loadTimeLineBySinceId()
     }
 
     override fun onClickReply(status: Status) {

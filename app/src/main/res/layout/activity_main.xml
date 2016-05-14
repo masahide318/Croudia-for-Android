@@ -61,6 +61,8 @@
                 <Button
                     android:id="@+id/post_button"
                     android:layout_gravity="end"
+                    android:layout_margin="5dp"
+                    android:background="@color/post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/main_post_button"/>

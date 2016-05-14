@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import t.masahide.android.croudia.presenter.AuthPresenter
 import t.masahide.android.croudia.R
 import t.masahide.android.croudia.constant.CroudiaConstants
@@ -19,7 +20,7 @@ import t.masahide.android.croudia.databinding.ActivityAuthBinding
  * Created by Masahide on 2016/03/12.
  */
 
-class AuthActivity: AppCompatActivity(){
+class AuthActivity: RxAppCompatActivity(){
 
 
     val authPresenter = AuthPresenter(this)
