@@ -54,13 +54,7 @@ open class TimelineFragmentBase : RxFragment() {
 
     fun loadedStatus(statusList: List<Status>) {
         binding.progressBar.visibility = View.GONE
-        if ( adapter.count > 0 ) {
-            for (item in statusList.reversed()) {
-                adapter.insert(item, 0)
-            }
-        } else {
-            adapter.addAll(statusList)
-        }
+        adapter.addAll(statusList)
         adapter.notifyDataSetChanged()
         binding.refresh.isRefreshing = false
     }
@@ -91,7 +85,7 @@ open class TimelineFragmentBase : RxFragment() {
         }
         binding.list.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-                presenter.onScrollChanged(view, firstVisibleItem, visibleItemCount, totalItemCount)
+                presenter.onScrollChanged(view, firstVisibleItem, visibleItemCount, totalItemCount,adapter)
             }
 
             override fun onScrollStateChanged(p0: AbsListView?, p1: Int) {
@@ -115,6 +109,14 @@ open class TimelineFragmentBase : RxFragment() {
 
     fun onErrorFavorite() {
 
+
+    }
+
+    fun loadedPagignStatus(statusList: List<Status>) {
+        for (item in statusList.reversed()) {
+            adapter.insert(item, 0)
+        }
+        adapter.notifyDataSetChanged()
 
     }
 }

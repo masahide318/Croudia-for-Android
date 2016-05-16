@@ -38,8 +38,8 @@ class MainActivity : RxAppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
     var mTmpSlideOffset = 0f
 
-    lateinit var mTimeLinePagerAdapter: TimeLinePagerAdapter;
-    lateinit var mViewPager: ViewPager
+    lateinit var timeLinePagerAdapter: TimeLinePagerAdapter;
+    lateinit var viewPager: ViewPager
     val behavior by lazy {
         BottomSheetBehavior.from(binding.bottomSheet)
     }
@@ -48,11 +48,11 @@ class MainActivity : RxAppCompatActivity(), NavigationView.OnNavigationItemSelec
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar)
 
-        mTimeLinePagerAdapter = TimeLinePagerAdapter(supportFragmentManager)
-        mViewPager = binding.container
-        mViewPager.adapter = mTimeLinePagerAdapter
+        timeLinePagerAdapter = TimeLinePagerAdapter(supportFragmentManager)
+        viewPager = binding.container
+        viewPager.adapter = timeLinePagerAdapter
 
-        binding.tabs.setupWithViewPager(mViewPager)
+        binding.tabs.setupWithViewPager(viewPager)
 
         val fab = binding.fab
 
@@ -127,7 +127,7 @@ class MainActivity : RxAppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     fun onPostSuccess() {
         closeBottomSheet()
-        mTimeLinePagerAdapter.getCurrentFragment(mViewPager,mViewPager.currentItem).loadTimeLineBySinceId()
+        timeLinePagerAdapter.getCurrentFragment(viewPager, viewPager.currentItem).loadTimeLineBySinceId()
     }
 
     override fun onClickReply(status: Status) {
