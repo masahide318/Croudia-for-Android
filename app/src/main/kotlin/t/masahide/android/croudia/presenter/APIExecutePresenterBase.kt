@@ -9,12 +9,14 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import t.masahide.android.croudia.LockObject
+import t.masahide.android.croudia.api.CroudiaAPIService
 import t.masahide.android.croudia.api.ServiceCreator
 import t.masahide.android.croudia.entitiy.AccessToken
 import t.masahide.android.croudia.entitiy.User
 import t.masahide.android.croudia.extensions.onCompleted
 import t.masahide.android.croudia.extensions.onError
 import t.masahide.android.croudia.extensions.onNext
+import t.masahide.android.croudia.service.IAccessTokenService
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.withLock
 
@@ -22,7 +24,7 @@ import kotlin.concurrent.withLock
  * Created by Masahide on 2016/05/04.
  */
 
-abstract class APIExecutePresenterBase(val service: ServiceCreatable = ServiceCreator, val accessTokenService: AccessTokenService = AccessTokenService()) {
+abstract class APIExecutePresenterBase(val croudiaAPI: CroudiaAPIService = ServiceCreator.build(), val accessTokenService: IAccessTokenService = AccessTokenService()) {
     val accessToken: String
         get() = " Bearer " + accessTokenService.getAccessToken().accessToken
 
@@ -43,7 +45,7 @@ abstract class APIExecutePresenterBase(val service: ServiceCreatable = ServiceCr
             LockObject.refreshing = true
             refreshObservable = Observable.create<AccessToken> {
                 subscribe ->
-                service.build().refreshToken(accessToken, refreshToken)
+                croudiaAPI.refreshToken(accessToken, refreshToken)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .onNext {

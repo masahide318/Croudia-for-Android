@@ -19,7 +19,7 @@ import t.masahide.android.croudia.presenter.TimeLineFragmentPresenter
  * Created by Masahide on 2016/05/09.
  */
 
-open class TimelineFragmentBase : RxFragment() {
+open class TimelineFragmentBase : RxFragment(),ITimeLineFragmentBase {
 
     interface Callback {
         fun onClickReply(status: Status)
@@ -28,6 +28,7 @@ open class TimelineFragmentBase : RxFragment() {
     val presenter = TimeLineFragmentPresenter(this)
     lateinit var adapter: TimeLineAdapter
     lateinit var binding: FragmentTimelineBinding
+    lateinit var callback:Callback
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -37,6 +38,9 @@ open class TimelineFragmentBase : RxFragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+        if(activity is Callback){
+            callback = activity as Callback
+        }
     }
 
     override fun onResume() {
@@ -44,7 +48,7 @@ open class TimelineFragmentBase : RxFragment() {
         presenter.requestTimeline(refresh = true)
     }
 
-    fun finishRefresh() {
+    override fun finishRefresh() {
         adapter.clear()
     }
 
@@ -52,7 +56,7 @@ open class TimelineFragmentBase : RxFragment() {
         presenter.loadTimeLineSince()
     }
 
-    fun loadedStatus(statusList: List<Status>) {
+    override fun loadedStatus(statusList: List<Status>) {
         binding.progressBar.visibility = View.GONE
         adapter.addAll(statusList)
         adapter.notifyDataSetChanged()
@@ -65,23 +69,7 @@ open class TimelineFragmentBase : RxFragment() {
         adapter = TimeLineAdapter(this.context, R.layout.time_line_row, arrayListOf())
         binding.refresh.setOnRefreshListener { presenter.refresh() }
         binding.list.setOnItemClickListener { parent, view, position, id ->
-            val selectedStatus = adapter.getItem(position)
-            when (id) {
-                R.id.txtShare.toLong() -> presenter.clickShare(selectedStatus)
-                R.id.favorite.toLong() -> presenter.clickFavorite(selectedStatus)
-                R.id.imgReply.toLong() -> {
-                    if (isAdded && activity is Callback) {
-                        (activity as Callback).onClickReply(selectedStatus)
-                    }
-                }
-                R.id.imgDelete.toLong() -> {
-                    presenter.clickDelete(selectedStatus)
-                    adapter.remove(selectedStatus)
-                    adapter.notifyDataSetChanged()
-                }
-                else -> {
-                }
-            }
+            presenter.selectListItem(position,id,adapter,callback)
         }
         binding.list.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
@@ -95,24 +83,24 @@ open class TimelineFragmentBase : RxFragment() {
         binding.list.adapter = adapter
     }
 
-    fun onSuccessShare() {
+    override fun onSuccessShare() {
         Snackbar.make(binding.root, "シェアしました", Snackbar.LENGTH_SHORT).setAction("Action", null).show()
     }
 
-    fun onErrorShare() {
+    override fun onErrorShare() {
 
     }
 
-    fun onSuccessFavorite() {
+    override fun onSuccessFavorite() {
         Snackbar.make(binding.root, "お気に入り登録しました", Snackbar.LENGTH_SHORT).setAction("Action", null).show()
     }
 
-    fun onErrorFavorite() {
+    override fun onErrorFavorite() {
 
 
     }
 
-    fun loadedPagignStatus(statusList: List<Status>) {
+    override fun loadedPagignStatus(statusList: List<Status>) {
         for (item in statusList.reversed()) {
             adapter.insert(item, 0)
         }

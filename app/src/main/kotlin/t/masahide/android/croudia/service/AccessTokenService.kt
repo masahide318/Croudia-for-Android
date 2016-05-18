@@ -10,36 +10,28 @@ import java.util.Date
 import t.masahide.android.croudia.MyApplication
 import t.masahide.android.croudia.entitiy.AccessToken
 
-class AccessTokenService {
+class AccessTokenService:IAccessTokenService {
     private val preferences: SharedPreferences
 
     init {
         preferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.getInstance())
     }
 
-    fun logout(){
+    override fun logout(){
         preferences.edit().clear().commit()
     }
 
-    fun saveAccessToken(accessToken: AccessToken) {
+    override fun saveAccessToken(accessToken: AccessToken) {
         preferences.applyToJson("access_token", accessToken)
+        //有効期限少し短くしてる
         preferences.edit().putLong("expired_at", Date().time + accessToken.expiresIn * 900).commit()
     }
 
-    fun hasAccessToken(): Boolean {
-        if (!preferences.contains("access_token")) return false
-        val accessToken = getAccessToken()
-        return accessToken.refreshToken != ""
-    }
-
-    fun getAccessToken(): AccessToken {
+    override fun getAccessToken(): AccessToken {
         return preferences.getFromJson("access_token", AccessToken::class.java)
     }
 
-    fun isExpiredToken(): Boolean {
+    override fun isExpiredToken(): Boolean {
         return Date().time >= preferences.getLong("expired_at", 0)
-//        return true
     }
-
-
 }

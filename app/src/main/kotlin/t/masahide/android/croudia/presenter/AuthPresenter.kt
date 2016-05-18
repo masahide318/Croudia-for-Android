@@ -21,7 +21,7 @@ import t.masahide.android.croudia.ui.activity.MainActivity
 class AuthPresenter(val activity: AuthActivity, val preferenceService: PreferenceService = PreferenceService()) : APIExecutePresenterBase() {
 
     fun auth(code: String) {
-        service.build().createToken(code)
+        croudiaAPI.createToken(code)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { }
@@ -32,7 +32,7 @@ class AuthPresenter(val activity: AuthActivity, val preferenceService: Preferenc
     }
 
     fun verifyCredential() {
-        service.build().verifyCredentials(accessToken)
+        croudiaAPI.verifyCredentials(accessToken)
                 .compose(activity.bindToLifecycle<User>())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -8,20 +8,16 @@ import t.masahide.android.croudia.extensions.onNext
 import t.masahide.android.croudia.service.PreferenceService
 import t.masahide.android.croudia.ui.activity.MainActivity
 
-/**
- * Created by Masahide on 2016/03/13.
- */
 
 class MainPresenter(val activity: MainActivity, val preferenceService: PreferenceService = PreferenceService()) : APIExecutePresenterBase() {
     fun isLogin(): Boolean {
-        //        accessTokenService.logout()
         return !accessTokenService.getAccessToken().accessToken.isNullOrEmpty()
     }
 
     //
     fun verifyCredential() {
         refreshToken().subscribe {
-            service.build().verifyCredentials(accessToken)
+            croudiaAPI.verifyCredentials(accessToken)
                     .compose(activity.bindToLifecycle<User>())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -36,7 +32,7 @@ class MainPresenter(val activity: MainActivity, val preferenceService: Preferenc
 
     fun postStatus(status: String,replyStatusId:String = "") {
         refreshToken().subscribe {
-            service.build().postStatus(accessToken,status,replyStatusId)
+            croudiaAPI.postStatus(accessToken,status,replyStatusId)
                     .compose(activity.bindToLifecycle<Status>())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
